@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 
 import { LoggerService } from './logger.service';
+import { HelloComponent } from './hello.component';
 
 @Component({
   selector: 'my-app',
@@ -8,14 +9,17 @@ import { LoggerService } from './logger.service';
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
+  @ViewChild(HelloComponent, {static: true}) childComp: HelloComponent;
   name = 'Angular';
 
   stateLog: string[] = [];
 
   constructor(private loggerService: LoggerService) {}
 
-  onStateChanged(state: boolean) {
-    this.stateLog.push(`State became ${state}`);
-    this.loggerService.log(`AppComponent: New state: ${state}`);
+  ngAfterContentInit(): void {
+    this.childComp.stateChange.subscribe((state: boolean) => {
+      this.stateLog.push(`State became ${state}`);
+      this.loggerService.log(`AppComponent: New state: ${state}`);
+    });
   }
 }
