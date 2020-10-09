@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 
 import { LoggerService } from './logger.service';
 
@@ -7,15 +7,15 @@ import { LoggerService } from './logger.service';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css'],
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   name = 'Angular';
-
   stateLog: string[] = [];
 
   constructor(private loggerService: LoggerService) {}
 
-  onStateChanged(state: boolean) {
-    this.stateLog.push(`State became ${state}`);
-    this.loggerService.log(`AppComponent: New state: ${state}`);
+  ngOnInit() {
+    this.loggerService.state.subscribe((state: string) => {
+      this.stateLog.push(`State became ${state}`);
+    });
   }
 }
